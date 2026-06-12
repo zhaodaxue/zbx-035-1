@@ -14,15 +14,15 @@ export const seedData: ParkingRecord[] = [
     plateSuffix: "A8",
     visitingResident: "3栋 1202室",
     entryTime: setTime(today, 8, 30),
-    allowedUntil: setTime(today, 10, 30),
+    allowedUntil: setTime(today, 10, 10),
     isDeparted: false,
   },
   {
     id: "2",
     plateSuffix: "6B",
     visitingResident: "7栋 501室",
-    entryTime: setTime(today, 9, 15),
-    allowedUntil: setTime(today, 11, 15),
+    entryTime: setTime(today, 8, 20),
+    allowedUntil: setTime(today, 10, 25),
     isDeparted: false,
   },
   {

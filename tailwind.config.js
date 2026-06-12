@@ -32,6 +32,7 @@ export default {
         "fade-in": "fadeIn 0.3s ease-out forwards",
         "slide-down": "slideDown 0.3s ease-out",
         "count-up": "countUp 0.8s ease-out",
+        "highlight-pulse": "highlightPulse 2s ease-in-out",
       },
       keyframes: {
         fadeOut: {
@@ -49,6 +50,11 @@ export default {
         countUp: {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        highlightPulse: {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(251, 191, 36, 0)" },
+          "25%, 75%": { boxShadow: "0 0 0 8px rgba(251, 191, 36, 0.3)" },
+          "50%": { boxShadow: "0 0 0 12px rgba(251, 191, 36, 0.15)" },
         },
       },
     },

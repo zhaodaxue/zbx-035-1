@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ChevronDown, ChevronUp, CheckCircle } from "lucide-react";
+import { ChevronDown, CheckCircle, ChevronUp as ChevronUpIcon } from "lucide-react";
 import ParkingItem from "./ParkingItem";
 import { useParkingStore } from "@/store/useParkingStore";
 import { filterByPlateSuffix } from "@/utils/filter";
@@ -10,10 +10,14 @@ export default function DepartedSection() {
   const records = useParkingStore((state) => state.records);
   const plateFilter = useParkingStore((state) => state.plateFilter);
 
-  const departedRecords = useMemo(() => {
-    const { departed } = groupByStatus(records);
-    const filtered = filterByPlateSuffix(departed, plateFilter);
-    return sortByEntryTimeDesc(filtered);
+  const { departedRecords, activeMatchCount } = useMemo(() => {
+    const { active, departed } = groupByStatus(records);
+    const filteredDeparted = filterByPlateSuffix(departed, plateFilter);
+    const filteredActive = filterByPlateSuffix(active, plateFilter);
+    return {
+      departedRecords: sortByEntryTimeDesc(filteredDeparted),
+      activeMatchCount: filteredActive.length,
+    };
   }, [records, plateFilter]);
 
   if (departedRecords.length === 0 && !plateFilter) {
@@ -41,8 +45,14 @@ export default function DepartedSection() {
       {isExpanded && (
         <div className="mt-3 space-y-3 overflow-hidden animate-slide-down">
           {departedRecords.length === 0 ? (
-            <div className="card p-8 text-center text-gray-500">
-              未找到匹配的离场记录
+            <div className="card p-8 text-center">
+              <p className="text-gray-500">未找到匹配的离场记录</p>
+              {activeMatchCount > 0 && plateFilter && (
+                <p className="text-primary text-sm mt-2 flex items-center justify-center gap-1">
+                  <ChevronUpIcon className="w-4 h-4" />
+                  在场区有 {activeMatchCount} 条匹配记录
+                </p>
+              )}
             </div>
           ) : (
             departedRecords.map((record) => (

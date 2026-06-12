@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Car, AlertTriangle, LogOut } from "lucide-react";
+import { Car, AlertTriangle, Clock, LogOut } from "lucide-react";
 import { useParkingStore } from "@/store/useParkingStore";
 
 function AnimatedNumber({ value }: { value: number }) {
@@ -9,7 +9,7 @@ function AnimatedNumber({ value }: { value: number }) {
   useEffect(() => {
     if (prevValue === value) return;
 
-    const duration = 400;
+    const duration = 250;
     const startTime = performance.now();
     const startValue = prevValue;
 
@@ -51,6 +51,9 @@ export default function HeaderStats() {
     });
   };
 
+  const showUpcoming = stats.upcomingOvertimeCount > 0;
+  const gridCols = showUpcoming ? "grid-cols-4" : "grid-cols-3";
+
   return (
     <header className="bg-gradient-to-r from-primary-dark via-primary to-primary-light text-white py-6 px-8 shadow-lg">
       <div className="max-w-5xl mx-auto">
@@ -65,15 +68,15 @@ export default function HeaderStats() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className={`grid ${gridCols} gap-3 md:gap-4`}>
           <div className="stat-card animate-count-up" style={{ animationDelay: "0s" }}>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <div className="p-2 bg-white/20 rounded-lg">
                 <Car className="w-5 h-5" />
               </div>
               <div>
                 <p className="text-white/70 text-xs">当前在场</p>
-                <p className="text-3xl font-bold">
+                <p className="text-2xl md:text-3xl font-bold">
                   <AnimatedNumber value={stats.currentCount} />
                 </p>
               </div>
@@ -82,29 +85,48 @@ export default function HeaderStats() {
 
           <div
             className={`stat-card animate-count-up ${stats.overtimeCount > 0 ? "ring-2 ring-red-400/50" : ""}`}
-            style={{ animationDelay: "0.15s" }}
+            style={{ animationDelay: "0.1s" }}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <div className={`p-2 rounded-lg ${stats.overtimeCount > 0 ? "bg-red-500/30" : "bg-white/20"}`}>
                 <AlertTriangle className={`w-5 h-5 ${stats.overtimeCount > 0 ? "text-red-200" : ""}`} />
               </div>
               <div>
                 <p className="text-white/70 text-xs">超时未离场</p>
-                <p className={`text-3xl font-bold ${stats.overtimeCount > 0 ? "text-red-300" : ""}`}>
+                <p className={`text-2xl md:text-3xl font-bold ${stats.overtimeCount > 0 ? "text-red-300" : ""}`}>
                   <AnimatedNumber value={stats.overtimeCount} />
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="stat-card animate-count-up" style={{ animationDelay: "0.3s" }}>
-            <div className="flex items-center gap-3">
+          {showUpcoming && (
+            <div
+              className="stat-card animate-count-up ring-2 ring-amber-400/50"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="p-2 rounded-lg bg-amber-500/30">
+                  <Clock className="w-5 h-5 text-amber-200" />
+                </div>
+                <div>
+                  <p className="text-white/70 text-xs">即将超时</p>
+                  <p className="text-2xl md:text-3xl font-bold text-amber-300">
+                    <AnimatedNumber value={stats.upcomingOvertimeCount} />
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="stat-card animate-count-up" style={{ animationDelay: showUpcoming ? "0.3s" : "0.2s" }}>
+            <div className="flex items-center gap-2 md:gap-3">
               <div className="p-2 bg-white/20 rounded-lg">
                 <LogOut className="w-5 h-5" />
               </div>
               <div>
                 <p className="text-white/70 text-xs">今日累计离场</p>
-                <p className="text-3xl font-bold">
+                <p className="text-2xl md:text-3xl font-bold">
                   <AnimatedNumber value={stats.todayDeparted} />
                 </p>
               </div>

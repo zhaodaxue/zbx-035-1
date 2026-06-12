@@ -1,5 +1,6 @@
 import HeaderStats from "@/components/HeaderStats";
 import PlateFilter from "@/components/PlateFilter";
+import WarningBar from "@/components/WarningBar";
 import ParkingList from "@/components/ParkingList";
 import DepartedSection from "@/components/DepartedSection";
 
@@ -13,7 +14,9 @@ export default function Home() {
           <PlateFilter />
         </div>
 
-        <div className="max-h-[calc(100vh-380px)] overflow-y-auto pr-2 scrollbar-thin">
+        <WarningBar />
+
+        <div className="max-h-[calc(100vh-420px)] overflow-y-auto pr-2 scrollbar-thin">
           <ParkingList />
           <DepartedSection />
         </div>

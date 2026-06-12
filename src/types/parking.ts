@@ -11,5 +11,6 @@ export interface ParkingRecord {
 export interface ParkingStats {
   currentCount: number;
   overtimeCount: number;
+  upcomingOvertimeCount: number;
   todayDeparted: number;
 }
