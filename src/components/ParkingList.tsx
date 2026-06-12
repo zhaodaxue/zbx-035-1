@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Car } from "lucide-react";
+import { Car, ChevronDown } from "lucide-react";
 import ParkingItem from "./ParkingItem";
 import { useParkingStore } from "@/store/useParkingStore";
 import { filterByPlateSuffix } from "@/utils/filter";
@@ -9,10 +9,14 @@ export default function ParkingList() {
   const records = useParkingStore((state) => state.records);
   const plateFilter = useParkingStore((state) => state.plateFilter);
 
-  const activeRecords = useMemo(() => {
-    const { active } = groupByStatus(records);
-    const filtered = filterByPlateSuffix(active, plateFilter);
-    return sortByEntryTimeDesc(filtered);
+  const { activeRecords, departedMatchCount } = useMemo(() => {
+    const { active, departed } = groupByStatus(records);
+    const filteredActive = filterByPlateSuffix(active, plateFilter);
+    const filteredDeparted = filterByPlateSuffix(departed, plateFilter);
+    return {
+      activeRecords: sortByEntryTimeDesc(filteredActive),
+      departedMatchCount: filteredDeparted.length,
+    };
   }, [records, plateFilter]);
 
   if (activeRecords.length === 0) {
@@ -22,9 +26,15 @@ export default function ParkingList() {
           <Car className="w-8 h-8 text-gray-400" />
         </div>
         <p className="text-gray-500 text-lg">
-          {plateFilter ? "未找到匹配的车辆" : "暂无在场车辆"}
+          {plateFilter ? "在场车辆中未找到匹配结果" : "暂无在场车辆"}
         </p>
-        {plateFilter && (
+        {plateFilter && departedMatchCount > 0 && (
+          <p className="text-primary text-sm mt-2 flex items-center justify-center gap-1">
+            <ChevronDown className="w-4 h-4" />
+            已离场区有 {departedMatchCount} 条匹配记录，请展开下方查看
+          </p>
+        )}
+        {plateFilter && departedMatchCount === 0 && (
           <p className="text-gray-400 text-sm mt-1">请尝试其他车牌尾号</p>
         )}
       </div>

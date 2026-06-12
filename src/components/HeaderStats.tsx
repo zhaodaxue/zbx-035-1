@@ -3,12 +3,15 @@ import { Car, AlertTriangle, LogOut } from "lucide-react";
 import { useParkingStore } from "@/store/useParkingStore";
 
 function AnimatedNumber({ value }: { value: number }) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
+  const [prevValue, setPrevValue] = useState(value);
 
   useEffect(() => {
-    const duration = 800;
+    if (prevValue === value) return;
+
+    const duration = 400;
     const startTime = performance.now();
-    const startValue = 0;
+    const startValue = prevValue;
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
@@ -22,7 +25,8 @@ function AnimatedNumber({ value }: { value: number }) {
     };
 
     requestAnimationFrame(animate);
-  }, [value]);
+    setPrevValue(value);
+  }, [value, prevValue]);
 
   return <span>{display}</span>;
 }
@@ -56,12 +60,8 @@ export default function HeaderStats() {
               访客车辆临时停放告示
             </h1>
             <p className="text-white/80 text-sm">
-              {formatDate(now)} · 当前时间 {formatTime(now)}
+              {formatDate(now)} · 告示时间 {formatTime(now)}
             </p>
-          </div>
-          <div className="mt-2 md:mt-0 flex items-center gap-2 text-sm text-white/70">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span>实时监控中</span>
           </div>
         </div>
 
